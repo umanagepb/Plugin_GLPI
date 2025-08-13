@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <name>Evolution Integration</name>
+    <key>evolutionintegration</key>
+    <state>stable</state>
+    <version>1.0.0</version>
+    <description>Integração completa com Evolution API para WhatsApp Business. Gerencia conversas, notificações automáticas e relatórios de tempo.</description>
+    <author>Umanage Tecnologia de Gestão Ltda</author>
+    <license>GPL v2+</license>
+    <homepage>https://umanage.com.br</homepage>
+    <platform>10.0</platform>
+    <namespace>evolutionintegration</namespace>
+    <requirements>
+        <glpi>
+            <min>10.0.0</min>
+            <max>10.1.99</max>
+        </glpi>
+        <php>
+            <min>7.4</min>
+        </php>
+    </requirements>
+</root>

@@ -1,0 +1,274 @@
+# Hours Tracking Plugin - Portuguese (Brazil) Translation
+# Copyright (C) 2024
+# This file is distributed under the same license as the Hours Tracking package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Hours Tracking Plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 12:00+0000\n"
+"PO-Revision-Date: 2024-08-13 12:00+0000\n"
+"Last-Translator: Assistant IA\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Controle de Horas"
+msgstr "Controle de Horas"
+
+msgid "Hours Tracking"
+msgstr "Controle de Horas"
+
+msgid "Relatórios"
+msgstr "Relatórios"
+
+msgid "Por Atendente"
+msgstr "Por Atendente"
+
+msgid "Por Cliente"
+msgstr "Por Cliente"
+
+msgid "Taxas por Cliente"
+msgstr "Taxas por Cliente"
+
+msgid "Client Rate"
+msgstr "Taxa do Cliente"
+
+msgid "Client Rates"
+msgstr "Taxas dos Clientes"
+
+msgid "Configuração do Controle de Horas"
+msgstr "Configuração do Controle de Horas"
+
+msgid "Configurações Gerais"
+msgstr "Configurações Gerais"
+
+msgid "Valor da hora padrão (R$)"
+msgstr "Valor da hora padrão (R$)"
+
+msgid "Horas mínimas de faturamento"
+msgstr "Horas mínimas de faturamento"
+
+msgid "Dias úteis de faturamento"
+msgstr "Dias úteis de faturamento"
+
+msgid "Arredondamento de horas (em minutos)"
+msgstr "Arredondamento de horas (em minutos)"
+
+msgid "Salvar"
+msgstr "Salvar"
+
+msgid "Filtrar Relatório"
+msgstr "Filtrar Relatório"
+
+msgid "Data Início"
+msgstr "Data Início"
+
+msgid "Data Fim"
+msgstr "Data Fim"
+
+msgid "Atendente"
+msgstr "Atendente"
+
+msgid "Cliente"
+msgstr "Cliente"
+
+msgid "Todos"
+msgstr "Todos"
+
+msgid "Gerar Relatório"
+msgstr "Gerar Relatório"
+
+msgid "Exportar CSV"
+msgstr "Exportar CSV"
+
+msgid "Exportar PDF"
+msgstr "Exportar PDF"
+
+msgid "Total Horas"
+msgstr "Total Horas"
+
+msgid "Valor Total"
+msgstr "Valor Total"
+
+msgid "Taxa Horária"
+msgstr "Taxa Horária"
+
+msgid "Ticket"
+msgstr "Ticket"
+
+msgid "Assunto"
+msgstr "Assunto"
+
+msgid "Data"
+msgstr "Data"
+
+msgid "Descrição"
+msgstr "Descrição"
+
+msgid "Solicitante"
+msgstr "Solicitante"
+
+msgid "Agente"
+msgstr "Agente"
+
+msgid "Tempo"
+msgstr "Tempo"
+
+msgid "Valor"
+msgstr "Valor"
+
+msgid "TOTAL"
+msgstr "TOTAL"
+
+msgid "Informe as datas de início e fim."
+msgstr "Informe as datas de início e fim."
+
+msgid "Informe as datas e selecione um cliente."
+msgstr "Informe as datas e selecione um cliente."
+
+msgid "Selecione um cliente"
+msgstr "Selecione um cliente"
+
+msgid "Relatório por Atendente"
+msgstr "Relatório por Atendente"
+
+msgid "Relatório Detalhado para Cliente"
+msgstr "Relatório Detalhado para Cliente"
+
+msgid "Relatórios por Atendente"
+msgstr "Relatórios por Atendente"
+
+msgid "Relatórios por Cliente"
+msgstr "Relatórios por Cliente"
+
+msgid "Tipo de Relatório"
+msgstr "Tipo de Relatório"
+
+msgid "Resumo"
+msgstr "Resumo"
+
+msgid "Detalhado"
+msgstr "Detalhado"
+
+msgid "Gerenciar Taxas por Cliente"
+msgstr "Gerenciar Taxas por Cliente"
+
+msgid "Configurar Taxa"
+msgstr "Configurar Taxa"
+
+msgid "Taxa Horária (R$)"
+msgstr "Taxa Horária (R$)"
+
+msgid "Taxas Configuradas"
+msgstr "Taxas Configuradas"
+
+msgid "Última Modificação"
+msgstr "Última Modificação"
+
+msgid "Nenhuma taxa configurada"
+msgstr "Nenhuma taxa configurada"
+
+msgid "Configurações salvas com sucesso!"
+msgstr "Configurações salvas com sucesso!"
+
+msgid "Erro ao salvar configurações: "
+msgstr "Erro ao salvar configurações: "
+
+msgid "Taxa salva com sucesso!"
+msgstr "Taxa salva com sucesso!"
+
+msgid "Erro ao salvar taxa"
+msgstr "Erro ao salvar taxa"
+
+msgid "Ação não autorizada"
+msgstr "Ação não autorizada"
+
+msgid "Erro ao carregar dados: "
+msgstr "Erro ao carregar dados: "
+
+msgid "Erro ao gerar relatório"
+msgstr "Erro ao gerar relatório"
+
+msgid "Invalid client ID"
+msgstr "ID do cliente inválido"
+
+msgid "Invalid hourly rate"
+msgstr "Taxa horária inválida"
+
+msgid "Access denied to this entity"
+msgstr "Acesso negado a esta entidade"
+
+msgid "Invalid start date"
+msgstr "Data de início inválida"
+
+msgid "Invalid end date"
+msgstr "Data de fim inválida"
+
+msgid "Invalid attendant ID"
+msgstr "ID do atendente inválido"
+
+msgid "Access denied"
+msgstr "Acesso negado"
+
+msgid "Invalid parameters"
+msgstr "Parâmetros inválidos"
+
+msgid "Rate saved successfully"
+msgstr "Taxa salva com sucesso"
+
+msgid "Error saving rate"
+msgstr "Erro ao salvar taxa"
+
+msgid "Invalid action"
+msgstr "Ação inválida"
+
+msgid "CSRF token validation failed"
+msgstr "Falha na validação do token CSRF"
+
+msgid "View Reports"
+msgstr "Visualizar Relatórios"
+
+msgid "Manage Client Rates"
+msgstr "Gerenciar Taxas dos Clientes"
+
+msgid "Plugin Configuration"
+msgstr "Configuração do Plugin"
+
+msgid "Rights authorization"
+msgstr "Autorização de direitos"
+
+msgid "Read"
+msgstr "Ler"
+
+msgid "Read/Update"
+msgstr "Ler/Atualizar"
+
+msgid "All"
+msgstr "Todos"
+
+msgid "No"
+msgstr "Não"
+
+msgid "Unknown"
+msgstr "Desconhecido"
+
+msgid "Report"
+msgstr "Relatório"
+
+msgid "Reports"
+msgstr "Relatórios"
+
+msgid "Read notes"
+msgstr "Ler notas"
+
+msgid "Read client rate notes"
+msgstr "Ler notas de taxa do cliente"
+
+msgid "Página"
+msgstr "Página"
+
+msgid "Relatório de Controle de Horas"
+msgstr "Relatório de Controle de Horas"

@@ -1,0 +1,70 @@
+services:
+  db:
+    image: mariadb:10.11
+    container_name: glpi_db
+    environment:
+      MARIADB_ROOT_PASSWORD: glpi
+      MARIADB_DATABASE: glpi
+      MARIADB_USER: glpi
+      MARIADB_PASSWORD: glpi
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    networks:
+      - glpi_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "glpi", "-pglpi"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+
+  glpi:
+    image: ghcr.io/glpi-project/glpi:10.0
+    container_name: glpi_app
+    environment:
+      GLPI_DB_HOST: db
+      GLPI_DB_PORT: 3306
+      GLPI_DB_NAME: glpi
+      GLPI_DB_USER: glpi
+      GLPI_DB_PASSWORD: glpi
+      GLPI_ADMIN_PASSWORD: glpi123
+      APACHE_DOCUMENT_ROOT: /var/www/html/public
+      PHP_MEMORY_LIMIT: 512M
+      PHP_MAX_EXECUTION_TIME: 600
+      PHP_MAX_INPUT_TIME: 600
+      PHP_UPLOAD_MAX_FILESIZE: 25M
+      PHP_POST_MAX_SIZE: 25M
+      TZ: America/Sao_Paulo
+    volumes:
+      - files:/var/glpi/files
+      - config:/var/glpi/config
+      - marketplace:/var/www/html/glpi/marketplace
+      - plugins:/var/www/html/glpi/plugins
+      - ./evolutionintegration:/var/www/html/glpi/plugins/evolutionintegration:rw
+      - ./hourstracking:/var/www/html/glpi/plugins/hourstracking:rw
+      - ./clockifyintegration:/var/www/html/glpi/plugins/clockifyintegration:rw
+    ports:
+      - 8080:80
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - glpi_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"] 
+      timeout: 10s
+      retries: 5
+      interval: 30s
+
+volumes:
+  db_data:
+  files:
+  config:
+  marketplace:
+  plugins:
+
+networks:
+  glpi_network:
+    driver: bridge

@@ -1,0 +1,93 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Evolution Integration\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-13 00:00+0000\n"
+"PO-Revision-Date: 2025-08-13 00:00+0000\n"
+"Last-Translator: Umanage Tecnologia\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Evolution Integration"
+msgstr "Integração Evolution"
+
+msgid "Evolution Integration Configuration"
+msgstr "Configuração da Integração Evolution"
+
+msgid "Configuration"
+msgstr "Configuração"
+
+msgid "Configuration updated successfully"
+msgstr "Configuração atualizada com sucesso"
+
+msgid "Conversation Management"
+msgstr "Gerenciamento de Conversas"
+
+msgid "Inactivity Timeout (seconds)"
+msgstr "Tempo Limite de Inatividade (segundos)"
+
+msgid "Conversation Retention Days"
+msgstr "Dias de Retenção de Conversas"
+
+msgid "API Endpoint"
+msgstr "Endpoint da API"
+
+msgid "API Token"
+msgstr "Token da API"
+
+msgid "Auto Close Conversations"
+msgstr "Fechar Conversas Automaticamente"
+
+msgid "Webhook URL"
+msgstr "URL do Webhook"
+
+msgid "Default Instance"
+msgstr "Instância Padrão"
+
+msgid "Enable Notifications"
+msgstr "Habilitar Notificações"
+
+msgid "Notification Template"
+msgstr "Modelo de Notificação"
+
+msgid "API Connection Test"
+msgstr "Teste de Conexão da API"
+
+msgid "Test Connection"
+msgstr "Testar Conexão"
+
+msgid "Testing connection..."
+msgstr "Testando conexão..."
+
+msgid "Connection successful!"
+msgstr "Conexão bem-sucedida!"
+
+msgid "Connection failed:"
+msgstr "Falha na conexão:"
+
+msgid "Connection test failed:"
+msgstr "Teste de conexão falhou:"
+
+msgid "Conversation Report"
+msgstr "Relatório de Conversas"
+
+msgid "Clean old conversations"
+msgstr "Limpar conversas antigas"
+
+msgid "Ticket"
+msgstr "Ticket"
+
+msgid "Start Time"
+msgstr "Hora de Início"
+
+msgid "End Time"
+msgstr "Hora de Término"
+
+msgid "Duration (minutes)"
+msgstr "Duração (minutos)"
+
+msgid "Tempo de conversa registrado automaticamente"
+msgstr "Tempo de conversa registrado automaticamente"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <name>Controle de Horas</name>
+    <key>hourstracking</key>
+    <state>stable</state>
+    <version>1.0.0</version>
+    <description>Gerenciamento e Rastreamento de Horas de Atendimento</description>
+    <author>Assistente de IA</author>
+    <license>GPL v2+</license>
+    <platform>10.0</platform>
+    <namespace>hourstracking</namespace>
+</root>
