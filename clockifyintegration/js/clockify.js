@@ -588,7 +588,7 @@
         if (isTicketPage()) {
             console.log('Clockify: Página de ticket detectada');
             
-            // Tenta inserir o botão imediatamente
+            // Tenta inserir o popup imediatamente
             insertClockifyButton();
             
             // Também tenta após pequenos delays para aguardar carregamento dinâmico
@@ -617,8 +617,8 @@
                     }
                 });
                 
-                if (shouldRetry && !document.querySelector('.clockify-integration-container')) {
-                    console.log('Clockify: DOM alterado, tentando inserir botão novamente...');
+                if (shouldRetry && !document.querySelector('#clockify-popup')) {
+                    console.log('Clockify: DOM alterado, tentando criar popup novamente...');
                     setTimeout(insertClockifyButton, 500);
                 }
             });
