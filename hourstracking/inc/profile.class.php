@@ -62,7 +62,8 @@ class PluginHourstrackingProfile extends Profile {
     /**
      * Exibe formulário de configuração de direitos
      */
-    public function showForm($profiles_id) {
+    public function showForm($ID, array $options = []) {
+        $profiles_id = $ID;
         $profile = new Profile();
         $profile->getFromDB($profiles_id);
 
@@ -79,19 +80,26 @@ class PluginHourstrackingProfile extends Profile {
         echo "</tr>";
 
         $rights = [
-            'plugin_hourstracking_report' => __('View Reports', 'hourstracking'),
-            'plugin_hourstracking_clientrate' => __('Manage Client Rates', 'hourstracking'),
-            'plugin_hourstracking_config' => __('Plugin Configuration', 'hourstracking')
+            'plugin_hourstracking_report' => [
+                'label' => __('View Reports', 'hourstracking'),
+                'field' => 'plugin_hourstracking_report'
+            ],
+            'plugin_hourstracking_clientrate' => [
+                'label' => __('Manage Client Rates', 'hourstracking'),
+                'field' => 'plugin_hourstracking_clientrate'
+            ],
+            'plugin_hourstracking_config' => [
+                'label' => __('Plugin Configuration', 'hourstracking'),
+                'field' => 'plugin_hourstracking_config'
+            ]
         ];
 
-        foreach ($rights as $right => $label) {
-            $this->displayRightsChoiceMatrix(
-                $right,
-                $label,
-                $profile->fields[$right] ?? 0,
-                $canedit
-            );
-        }
+        $options = [
+            'canedit' => $canedit,
+            'profiles_id' => $profiles_id
+        ];
+
+        $this->displayRightsChoiceMatrix($rights, $options);
 
         if ($canedit) {
             echo "<tr class='tab_bg_1'>";
@@ -107,31 +115,43 @@ class PluginHourstrackingProfile extends Profile {
     }
 
     /**
-     * Exibe matriz de escolha de direitos
+     * Exibe matriz de escolha de direitos compatível com GLPI 10.0+
      */
-    private function displayRightsChoiceMatrix($name, $label, $value, $canedit) {
-        echo "<tr class='tab_bg_2'>";
-        echo "<td>$label</td>";
-        echo "<td>";
+    public function displayRightsChoiceMatrix(array $rights, array $options = []) {
+        $canedit = $options['canedit'] ?? false;
+        $profiles_id = $options['profiles_id'] ?? 0;
+        
+        $profile = new Profile();
+        $profile->getFromDB($profiles_id);
 
-        if ($canedit) {
-            echo "<select name='$name'>";
-            echo "<option value='0'" . ($value == 0 ? ' selected' : '') . ">" . __('No') . "</option>";
-            echo "<option value='" . READ . "'" . ($value == READ ? ' selected' : '') . ">" . __('Read') . "</option>";
-            echo "<option value='" . (READ | UPDATE) . "'" . ($value == (READ | UPDATE) ? ' selected' : '') . ">" . __('Read/Update') . "</option>";
-            echo "<option value='" . ALLSTANDARDRIGHT . "'" . ($value == ALLSTANDARDRIGHT ? ' selected' : '') . ">" . __('All') . "</option>";
-            echo "</select>";
-        } else {
-            $rights_names = [
-                0 => __('No'),
-                READ => __('Read'),
-                READ | UPDATE => __('Read/Update'),
-                ALLSTANDARDRIGHT => __('All')
-            ];
-            echo $rights_names[$value] ?? __('Unknown');
+        foreach ($rights as $right => $config) {
+            $label = $config['label'] ?? $right;
+            $field = $config['field'] ?? $right;
+            $value = $profile->fields[$field] ?? 0;
+
+            echo "<tr class='tab_bg_2'>";
+            echo "<td>$label</td>";
+            echo "<td>";
+
+            if ($canedit) {
+                echo "<select name='$field'>";
+                echo "<option value='0'" . ($value == 0 ? ' selected' : '') . ">" . __('No') . "</option>";
+                echo "<option value='" . READ . "'" . ($value == READ ? ' selected' : '') . ">" . __('Read') . "</option>";
+                echo "<option value='" . (READ | UPDATE) . "'" . ($value == (READ | UPDATE) ? ' selected' : '') . ">" . __('Read/Update') . "</option>";
+                echo "<option value='" . ALLSTANDARDRIGHT . "'" . ($value == ALLSTANDARDRIGHT ? ' selected' : '') . ">" . __('All') . "</option>";
+                echo "</select>";
+            } else {
+                $rights_names = [
+                    0 => __('No'),
+                    READ => __('Read'),
+                    READ | UPDATE => __('Read/Update'),
+                    ALLSTANDARDRIGHT => __('All')
+                ];
+                echo $rights_names[$value] ?? __('Unknown');
+            }
+
+            echo "</td>";
+            echo "</tr>";
         }
-
-        echo "</td>";
-        echo "</tr>";
     }
 }

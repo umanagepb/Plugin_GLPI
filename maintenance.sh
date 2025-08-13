@@ -98,8 +98,8 @@ fix_permissions() {
     glpi_dirs=(
         "/var/glpi/config"
         "/var/glpi/files"
-        "/var/www/html/glpi/marketplace"
-        "/var/www/html/glpi/plugins"
+        "/var/www/glpi/marketplace"
+        "/var/www/glpi/plugins"
     )
     
     for dir in "${glpi_dirs[@]}"; do

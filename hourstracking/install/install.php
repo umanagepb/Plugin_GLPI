@@ -9,10 +9,10 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Função principal de instalação
+ * Função principal de instalação (completa)
  * @return boolean
  */
-function plugin_hourstracking_install() {
+function plugin_hourstracking_install_complete() {
     global $DB;
 
     $install_status = true;
@@ -43,7 +43,7 @@ function plugin_hourstracking_create_configs_table() {
     global $DB;
 
     $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_hourstracking_configs` (
-        `id` INT(11) NOT NULL AUTO_INCREMENT,
+        `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
         `name` VARCHAR(255) NOT NULL,
         `value` TEXT,
         `date_mod` DATETIME DEFAULT NULL,
@@ -63,18 +63,51 @@ function plugin_hourstracking_create_configs_table() {
 function plugin_hourstracking_create_clientrates_table() {
     global $DB;
 
+    // Primeiro cria a tabela sem a chave estrangeira
     $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_hourstracking_clientrates` (
-        `id` INT(11) NOT NULL AUTO_INCREMENT,
-        `client_id` INT(11) NOT NULL,
+        `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        `client_id` INT(11) UNSIGNED NOT NULL,
         `hourly_rate` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
         `date_mod` DATETIME DEFAULT NULL,
         PRIMARY KEY (`id`),
         UNIQUE KEY `uniq_client` (`client_id`),
         KEY `idx_rate` (`hourly_rate`),
-        FOREIGN KEY (`client_id`) REFERENCES `glpi_entities` (`id`) ON DELETE CASCADE
+        KEY `idx_client_id` (`client_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
     
-    return $DB->queryOrDie($query, "Error creating clientrates table");
+    $result = $DB->queryOrDie($query, "Error creating clientrates table");
+    
+    // Se a tabela foi criada com sucesso, tenta adicionar a chave estrangeira
+    if ($result) {
+        // Verifica se a constraint já existe antes de tentar criá-la
+        $check_constraint = "SELECT COUNT(*) as count 
+                           FROM information_schema.TABLE_CONSTRAINTS 
+                           WHERE CONSTRAINT_SCHEMA = DATABASE() 
+                           AND TABLE_NAME = 'glpi_plugin_hourstracking_clientrates' 
+                           AND CONSTRAINT_NAME = 'fk_hourstracking_client'";
+        
+        $constraint_exists = $DB->request($check_constraint)->current();
+        
+        if ($constraint_exists['count'] == 0) {
+            // Verifica se a tabela glpi_entities existe antes de criar a FK
+            if ($DB->tableExists('glpi_entities')) {
+                $fk_query = "ALTER TABLE `glpi_plugin_hourstracking_clientrates` 
+                           ADD CONSTRAINT `fk_hourstracking_client` 
+                           FOREIGN KEY (`client_id`) REFERENCES `glpi_entities` (`id`) 
+                           ON DELETE CASCADE ON UPDATE CASCADE";
+                
+                // Tenta adicionar a FK, mas não falha se não conseguir
+                try {
+                    $DB->query($fk_query);
+                } catch (Exception $e) {
+                    // Log do erro mas não interrompe a instalação
+                    error_log("Warning: Could not create foreign key constraint for hourstracking clientrates: " . $e->getMessage());
+                }
+            }
+        }
+    }
+    
+    return $result;
 }
 
 /**

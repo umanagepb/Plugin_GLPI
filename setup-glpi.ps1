@@ -39,16 +39,23 @@ $attempt = 0
 do {
     $attempt++
     Write-Host "Tentativa $attempt de $maxAttempts..." -ForegroundColor Yellow
-    $dbReady = docker exec glpi_db mysqladmin ping -h localhost -u glpi -pglpi 2>$null
-    if (-not $dbReady) {
-        Start-Sleep -Seconds 5
+    try {
+        $dbReady = docker exec glpi_db mysqladmin ping -h localhost -u glpi -pglpi 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "MariaDB está pronto!" -ForegroundColor Green
+            break
+        }
+    } catch {
+        $dbReady = $false
     }
-} while (-not $dbReady -and $attempt -lt $maxAttempts)
-
-if (-not $dbReady) {
-    Write-Host "Erro: Banco de dados não iniciou corretamente" -ForegroundColor Red
-    exit 1
-}
+    
+    if ($attempt -eq $maxAttempts) {
+        Write-Host "Erro: Banco de dados não iniciou corretamente" -ForegroundColor Red
+        docker-compose logs glpi_db
+        exit 1
+    }
+    Start-Sleep -Seconds 5
+} while ($attempt -lt $maxAttempts)
 
 # Instala o GLPI
 Write-Host "Instalando GLPI..." -ForegroundColor Green
@@ -83,7 +90,8 @@ $glpiDirs = @(
     "/var/glpi/files/_tmp",
     "/var/glpi/files/_uploads",
     "/var/glpi/files/_inventories",
-    "/var/www/html/glpi/marketplace",
+    "/var/www/glpi/marketplace",
+    "/var/www/glpi/plugins",
     "/var/glpi/logs"
 )
 

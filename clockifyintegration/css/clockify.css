@@ -1,0 +1,102 @@
+/**
+ * Estilos CSS para o plugin Clockify Integration
+ * Garante que o botão seja exibido corretamente em diferentes versões do GLPI
+ */
+
+.clockify-integration-container {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: 15px !important;
+    z-index: 1000 !important;
+}
+
+.clockify-integration-container button {
+    background-color: #03a9f4 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    transition: background-color 0.2s ease !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    min-height: 28px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important;
+}
+
+.clockify-integration-container button:hover {
+    background-color: #0288d1 !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+}
+
+.clockify-integration-container button:active {
+    background-color: #0277bd !important;
+    transform: translateY(1px) !important;
+}
+
+.clockify-integration-container button:focus {
+    outline: 2px solid #4fc3f7 !important;
+    outline-offset: 2px !important;
+}
+
+/* Ajustes específicos para GLPI 10.x com Bootstrap */
+.card-header .clockify-integration-container {
+    margin-left: auto !important;
+    margin-right: 10px !important;
+}
+
+.card-header .d-flex .clockify-integration-container {
+    margin-left: 15px !important;
+}
+
+/* Ajustes para GLPI 9.x com tabelas tradicionais */
+.tab_cadre_fixe th .clockify-integration-container {
+    float: right !important;
+    margin-top: -2px !important;
+    margin-right: 10px !important;
+}
+
+.tab_cadre_fixe .tab_bg_1 th .clockify-integration-container,
+.tab_cadrehov .tab_bg_1 th .clockify-integration-container {
+    float: right !important;
+    margin-top: 0 !important;
+}
+
+/* Ajustes para diferentes tamanhos de tela */
+@media (max-width: 768px) {
+    .clockify-integration-container {
+        margin-left: 10px !important;
+        margin-right: 5px !important;
+    }
+    
+    .clockify-integration-container button {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+    }
+}
+
+/* Ajustes para tema escuro se disponível */
+@media (prefers-color-scheme: dark) {
+    .clockify-integration-container button {
+        background-color: #0277bd !important;
+    }
+    
+    .clockify-integration-container button:hover {
+        background-color: #01579b !important;
+    }
+}
+
+/* Ajustes para containers flex específicos */
+.flex-grow-1 .clockify-integration-container {
+    margin-left: auto !important;
+}
+
+/* Garante que o botão não quebre o layout */
+.clockify-integration-container {
+    flex-shrink: 0 !important;
+}

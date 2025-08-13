@@ -39,11 +39,10 @@ services:
     volumes:
       - files:/var/glpi/files
       - config:/var/glpi/config
-      - marketplace:/var/www/html/glpi/marketplace
-      - plugins:/var/www/html/glpi/plugins
-      - ./evolutionintegration:/var/www/html/glpi/plugins/evolutionintegration:rw
-      - ./hourstracking:/var/www/html/glpi/plugins/hourstracking:rw
-      - ./clockifyintegration:/var/www/html/glpi/plugins/clockifyintegration:rw
+      - marketplace:/var/www/glpi/marketplace
+      - ./evolutionintegration:/var/www/glpi/plugins/evolutionintegration:rw
+      - ./hourstracking:/var/www/glpi/plugins/hourstracking:rw
+      - ./clockifyintegration:/var/www/glpi/plugins/clockifyintegration:rw
     ports:
       - 8080:80
     depends_on:
@@ -63,7 +62,6 @@ volumes:
   files:
   config:
   marketplace:
-  plugins:
 
 networks:
   glpi_network:

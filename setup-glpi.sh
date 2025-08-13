@@ -78,8 +78,8 @@ glpi_dirs=(
     "/var/glpi/files/_tmp"
     "/var/glpi/files/_uploads"
     "/var/glpi/files/_inventories"
-    "/var/www/html/glpi/marketplace"
-    "/var/www/html/glpi/plugins"
+    "/var/www/glpi/marketplace"
+    "/var/www/glpi/plugins"
     "/var/glpi/logs"
 )
 
@@ -131,8 +131,8 @@ docker exec glpi_app php bin/console cache:clear
 
 # Configura permissões finais
 echo -e "${GREEN}Configurando permissões finais...${NC}"
-docker exec glpi_app chown -R www-data:www-data /var/www/html/glpi
-docker exec glpi_app chmod -R 755 /var/www/html/glpi
+docker exec glpi_app chown -R www-data:www-data /var/www/glpi
+docker exec glpi_app chmod -R 755 /var/www/glpi
 
 echo -e "\n${GREEN}Configuração concluída!${NC}"
 echo -e "\n${GREEN}Informações de acesso:${NC}"

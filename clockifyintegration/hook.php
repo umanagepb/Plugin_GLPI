@@ -7,6 +7,11 @@
 function plugin_clockifyintegration_init() {
    global $CFG_GLPI;
 
+   // Verifica se estamos em uma sessão válida
+   if (!Session::getLoginUserID()) {
+      return;
+   }
+
    // Obtém as configurações dinâmicas do plugin
    $api_key      = addslashes(Config::getConfigurationValue("plugin:Clockify Integration", "api_key"));
    $workspace_id = addslashes(Config::getConfigurationValue("plugin:Clockify Integration", "workspace_id"));
@@ -19,6 +24,9 @@ function plugin_clockifyintegration_init() {
        };
    </script>";
 
+   // Inclui o arquivo CSS do plugin
+   Html::includeCSS($CFG_GLPI['root_doc']."/plugins/clockifyintegration/css/clockify.css");
+   
    // Inclui o arquivo JavaScript do plugin
    Html::includeJS($CFG_GLPI['root_doc']."/plugins/clockifyintegration/js/clockify.js");
 }

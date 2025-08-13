@@ -20,8 +20,9 @@ function plugin_init_clockifyintegration() {
    $PLUGIN_HOOKS['csrf_compliant']['clockifyintegration'] = true;
    $PLUGIN_HOOKS['config_page']['clockifyintegration'] = 'front/config.form.php';
    
-   // Hook para incluir JavaScript e configurações
+   // Hook para incluir JavaScript, CSS e configurações
    if (Session::getLoginUserID()) {
+      $PLUGIN_HOOKS['add_css']['clockifyintegration'][] = 'css/clockify.css';
       $PLUGIN_HOOKS['add_javascript']['clockifyintegration'][] = 'js/clockify.js';
       $PLUGIN_HOOKS['init']['clockifyintegration'] = 'plugin_clockifyintegration_init';
    }

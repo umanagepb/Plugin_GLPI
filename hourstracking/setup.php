@@ -79,16 +79,6 @@ function plugin_hourstracking_check_config($verbose = false) {
 }
 
 /**
- * Define os direitos do plugin
- */
-function plugin_hourstracking_install_profiles() {
-    include_once(Plugin::getPhpDir('hourstracking') . "/inc/profile.class.php");
-    $profile = new PluginHourstrackingProfile();
-    $profile->initProfile();
-    return true;
-}
-
-/**
  * Atualiza direitos de perfil
  */
 function plugin_hourstracking_update_profiles() {

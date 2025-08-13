@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Clockify Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+        .flex-grow-1 {
+            flex-grow: 1;
+        }
+        .tab_cadre_fixe {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .tab_cadre_fixe th {
+            background: #e9ecef;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+        input[name="id"] {
+            display: none;
+        }
+        input[name="name"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste da Integração Clockify</h1>
+    <p>Esta página simula a estrutura de um ticket do GLPI para testar a integração com o Clockify.</p>
+
+    <!-- Simula configurações do plugin -->
+    <script>
+        window.clockifyIntegrationConfig = {
+            apiKey: 'test-api-key',
+            workspaceId: 'test-workspace-id'
+        };
+    </script>
+
+    <div class="test-container">
+        <h2>Teste 1: GLPI 10.x (Bootstrap Layout)</h2>
+        <div class="card-header">
+            <div class="flex-grow-1">
+                <h1>Ticket #12345 - Problema no sistema</h1>
+            </div>
+        </div>
+        <div class="info">
+            O botão deve aparecer no cabeçalho do card, à direita do título.
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>Teste 2: GLPI 9.x (Table Layout)</h2>
+        <table class="tab_cadre_fixe">
+            <tr>
+                <th>Ticket #67890 - Solicitação de acesso</th>
+            </tr>
+        </table>
+        <div class="info">
+            O botão deve aparecer dentro do cabeçalho da tabela, alinhado à direita.
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>Teste 3: Formulário com campos hidden</h2>
+        <form name="form">
+            <input type="hidden" name="id" value="99999">
+            <input type="text" name="name" value="Ticket de teste - Atualização de software" placeholder="Título do ticket">
+        </form>
+        <div class="info">
+            O botão deve capturar o ID do campo hidden e o título do input.
+        </div>
+    </div>
+
+    <!-- Inclui o CSS da integração -->
+    <link rel="stylesheet" href="css/clockify.css">
+    
+    <!-- Inclui o JavaScript da integração -->
+    <script src="js/clockify.js"></script>
+
+    <div class="test-container">
+        <h2>Instruções para teste:</h2>
+        <ol>
+            <li>Abra o console do navegador (F12)</li>
+            <li>Procure por mensagens do "Clockify" nos logs</li>
+            <li>Verifique se os botões aparecem nos locais corretos</li>
+            <li>Clique nos botões para testar a funcionalidade (gerará erro de API por usar credenciais de teste)</li>
+        </ol>
+        
+        <h2>Configuração para uso real:</h2>
+        <ol>
+            <li>Configure sua API Key real do Clockify em <code>window.clockifyIntegrationConfig.apiKey</code></li>
+            <li>Configure seu Workspace ID real em <code>window.clockifyIntegrationConfig.workspaceId</code></li>
+            <li>Teste em uma página de ticket real do GLPI</li>
+        </ol>
+    </div>
+</body>
+</html>
