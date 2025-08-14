@@ -13,6 +13,9 @@ use Glpi\Plugin\Hooks;
 function plugin_init_clockifyintegration() {
    global $PLUGIN_HOOKS;
 
+   // Inclui o arquivo de hooks
+   include_once(Plugin::getPhpDir('clockifyintegration') . '/hook.php');
+
    // Registra classes para autoload
    Plugin::registerClass('PluginClockifyintegrationConfig');
    Plugin::registerClass('PluginClockifyintegrationPlugin');
@@ -23,8 +26,9 @@ function plugin_init_clockifyintegration() {
    // Hook para incluir JavaScript, CSS e configurações
    if (Session::getLoginUserID()) {
       $PLUGIN_HOOKS['add_css']['clockifyintegration'][] = 'css/clockify.css';
+      $PLUGIN_HOOKS['add_javascript']['clockifyintegration'][] = 'js/config.js.php';
       $PLUGIN_HOOKS['add_javascript']['clockifyintegration'][] = 'js/clockify.js';
-      $PLUGIN_HOOKS['init']['clockifyintegration'] = 'plugin_clockifyintegration_init';
+      $PLUGIN_HOOKS['init']['clockifyintegration'] = 'plugin_clockifyintegration_init'; // Fallback
    }
 }
 

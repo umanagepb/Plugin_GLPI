@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Nova Abordagem - Clockify Integration</title>
+</head>
+<body>
+    <h1>Teste da Nova Abordagem de Configuração</h1>
+    
+    <div id="status"></div>
+    
+    <script>
+        console.log('=== TESTE DA NOVA ABORDAGEM ===');
+        
+        // Função para verificar periodicamente se as configurações foram carregadas
+        let checkCount = 0;
+        const maxChecks = 50;
+        
+        function checkConfig() {
+            checkCount++;
+            console.log(`Verificação ${checkCount}:`, {
+                'clockifyIntegrationConfigLoaded': window.clockifyIntegrationConfigLoaded,
+                'clockifyIntegrationConfig': window.clockifyIntegrationConfig
+            });
+            
+            const statusDiv = document.getElementById('status');
+            
+            if (window.clockifyIntegrationConfigLoaded && window.clockifyIntegrationConfig) {
+                statusDiv.innerHTML = `
+                    <h2 style="color: green;">✓ Configurações Carregadas!</h2>
+                    <p><strong>API Key:</strong> ${window.clockifyIntegrationConfig.apiKey ? 'Configurado (' + window.clockifyIntegrationConfig.apiKey.length + ' chars)' : 'Vazio'}</p>
+                    <p><strong>Workspace ID:</strong> ${window.clockifyIntegrationConfig.workspaceId ? 'Configurado' : 'Vazio'}</p>
+                    <p><strong>Configuração completa:</strong></p>
+                    <pre>${JSON.stringify(window.clockifyIntegrationConfig, null, 2)}</pre>
+                `;
+                return;
+            }
+            
+            if (checkCount >= maxChecks) {
+                statusDiv.innerHTML = `
+                    <h2 style="color: red;">✗ Timeout - Configurações não carregadas</h2>
+                    <p>Após ${checkCount} tentativas, as configurações não foram encontradas.</p>
+                `;
+                return;
+            }
+            
+            statusDiv.innerHTML = `
+                <h2 style="color: orange;">⏳ Aguardando configurações...</h2>
+                <p>Tentativa ${checkCount} de ${maxChecks}</p>
+            `;
+            
+            setTimeout(checkConfig, 100);
+        }
+        
+        // Simula o carregamento do arquivo config.js.php
+        // Na aplicação real, isso seria carregado automaticamente pelo GLPI
+        const script = document.createElement('script');
+        script.src = 'js/config.js.php?' + Date.now(); // Cache busting
+        script.onload = function() {
+            console.log('Script config.js.php carregado');
+        };
+        script.onerror = function() {
+            console.error('Erro ao carregar config.js.php');
+            document.getElementById('status').innerHTML = `
+                <h2 style="color: red;">✗ Erro ao carregar config.js.php</h2>
+                <p>Verifique se o arquivo existe e se o servidor está configurado para processar .js.php</p>
+            `;
+        };
+        document.head.appendChild(script);
+        
+        // Inicia a verificação
+        setTimeout(checkConfig, 500);
+    </script>
+</body>
+</html>

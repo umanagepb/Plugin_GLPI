@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Timer com Seleção de Projeto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .config-section {
+            background: #e9f7ef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .config-section h3 {
+            margin-top: 0;
+            color: #27ae60;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        .warning { color: #ffc107; }
+        
+        .log-area {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+
+        /* Estilos do Modal de Projetos */
+        .project-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .project-modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .project-modal h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        
+        .project-search {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .project-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        .project-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .project-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .project-item:last-child {
+            border-bottom: none;
+        }
+        
+        .project-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .project-client {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .project-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .modal-buttons {
+            margin-top: 20px;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+            margin-right: 10px;
+        }
+        
+        .btn-cancel:hover {
+            background: #545b62;
+        }
+
+        .timer-info {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .running-timer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Teste - Timer Melhorado com Seleção de Projeto</h1>
+    
+    <div class="test-container">
+        <h2>✨ Funcionalidades Implementadas</h2>
+        <ul>
+            <li>✅ Início de timer normal (sem projeto)</li>
+            <li>✅ Busca de projetos via API</li>
+            <li>✅ Popup de seleção de projeto ao parar timer</li>
+            <li>✅ Update do time-entry com projeto selecionado</li>
+            <li>✅ Parada do timer após update</li>
+            <li>✅ Filtro de busca nos projetos</li>
+            <li>✅ Interface responsiva e amigável</li>
+        </ul>
+    </div>
+
+    <div class="test-container">
+        <div class="config-section">
+            <h3>🔑 Configuração da API</h3>
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" placeholder="Sua API Key do Clockify" />
+            
+            <label for="workspaceId">Workspace ID:</label>
+            <input type="text" id="workspaceId" placeholder="ID do seu workspace" />
+        </div>
+
+        <div id="timerStatus" class="timer-info" style="display: none;">
+            <h4>⏱️ Status do Timer</h4>
+            <p id="timerStatusText">Nenhum timer ativo</p>
+            <p><strong>ID:</strong> <span id="currentTimerId">-</span></p>
+            <p><strong>Descrição:</strong> <span id="currentTimerDesc">-</span></p>
+            <p><strong>Início:</strong> <span id="currentTimerStart">-</span></p>
+        </div>
+
+        <h3>🧪 Teste do Fluxo Completo</h3>
+        <button onclick="startTestTimer()">▶️ 1. Iniciar Timer de Teste</button>
+        <button onclick="stopTimerWithProject()" id="stopBtn" disabled>⏹️ 2. Parar Timer (com seleção de projeto)</button>
+        <button onclick="getProjects()">📋 Listar Projetos Disponíveis</button>
+        <button onclick="clearLog()">🗑️ Limpar Log</button>
+        
+        <h3>📝 Log de Atividades</h3>
+        <div id="logArea" class="log-area"></div>
+    </div>
+
+    <!-- Modal de Seleção de Projeto -->
+    <div id="projectModal" class="project-modal" style="display: none;">
+        <div class="project-modal-content">
+            <h3>📋 Selecionar Projeto</h3>
+            <p>Escolha um projeto para associar ao seu registro de tempo:</p>
+            
+            <input type="text" id="projectSearch" class="project-search" placeholder="🔍 Buscar projeto..." />
+            
+            <div id="projectList" class="project-list">
+                <!-- Projetos serão inseridos aqui -->
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="cancelProjectSelection()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let logArea = document.getElementById('logArea');
+        let currentTimer = null;
+        let projects = [];
+        let selectedProjectId = null;
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type;
+            logArea.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        function clearLog() {
+            logArea.innerHTML = '';
+        }
+        
+        function getConfig() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const workspaceId = document.getElementById('workspaceId').value.trim();
+            
+            if (!apiKey || !workspaceId) {
+                log('❌ Erro: Configure a API Key e Workspace ID primeiro!', 'error');
+                return null;
+            }
+            
+            return { apiKey, workspaceId };
+        }
+
+        function updateTimerStatus(timer) {
+            const statusDiv = document.getElementById('timerStatus');
+            const statusText = document.getElementById('timerStatusText');
+            const timerId = document.getElementById('currentTimerId');
+            const timerDesc = document.getElementById('currentTimerDesc');
+            const timerStart = document.getElementById('currentTimerStart');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            if (timer) {
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'running-timer';
+                statusText.textContent = 'Timer ativo';
+                timerId.textContent = timer.id;
+                timerDesc.textContent = timer.description;
+                timerStart.textContent = new Date(timer.timeInterval.start).toLocaleString();
+                stopBtn.disabled = false;
+                currentTimer = timer;
+            } else {
+                statusDiv.style.display = 'block';
+                statusDiv.className = 'timer-info';
+                statusText.textContent = 'Nenhum timer ativo';
+                timerId.textContent = '-';
+                timerDesc.textContent = '-';
+                timerStart.textContent = '-';
+                stopBtn.disabled = true;
+                currentTimer = null;
+            }
+        }
+        
+        async function startTestTimer() {
+            const config = getConfig();
+            if (!config) return;
+            
+            log('🔄 Iniciando timer de teste...', 'info');
+            
+            const data = {
+                "start": new Date().toISOString(),
+                "description": "TESTE - Timer com seleção de projeto"
+            };
+            
+            try {
+                const response = await fetch(`https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/time-entries`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    log('✅ Timer iniciado com sucesso!', 'success');
+                    log(`📄 ID: ${result.id}`, 'info');
+                    log(`📝 Descrição: ${result.description}`, 'info');
+                    log(`⏰ Início: ${new Date(result.timeInterval.start).toLocaleString()}`, 'info');
+                    updateTimerStatus(result);
+                } else {
+                    log(`❌ Erro ao iniciar timer: ${response.status}`, 'error');
+                    log(`❌ Detalhes: ${JSON.stringify(result)}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erro de conexão: ${error.message}`, 'error');
+            }
+        }
+
+        async function getProjects() {
+            const config = getConfig();
+            if (!config) return;
+            
+            log('🔄 Buscando projetos do workspace...', 'info');
+            
+            try {
+                const response = await fetch(`https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/projects`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    projects = result;
+                    log(`✅ Encontrados ${projects.length} projetos:`, 'success');
+                    
+                    projects.forEach((project, index) => {
+                        log(`   ${index + 1}. ${project.name} (ID: ${project.id})`, 'info');
+                        if (project.clientName) {
+                            log(`      Cliente: ${project.clientName}`, 'info');
+                        }
+                    });
+                    
+                    if (projects.length === 0) {
+                        log('⚠️ Nenhum projeto encontrado. Crie projetos no Clockify primeiro.', 'warning');
+                    }
+                } else {
+                    log(`❌ Erro ao buscar projetos: ${response.status}`, 'error');
+                    log(`❌ Detalhes: ${JSON.stringify(result)}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erro de conexão: ${error.message}`, 'error');
+            }
+        }
+
+        function showProjectModal() {
+            if (projects.length === 0) {
+                log('⚠️ Nenhum projeto carregado. Buscando projetos...', 'warning');
+                getProjects().then(() => {
+                    if (projects.length > 0) {
+                        renderProjectModal();
+                    } else {
+                        log('❌ Não foi possível carregar os projetos.', 'error');
+                    }
+                });
+                return;
+            }
+            
+            renderProjectModal();
+        }
+
+        function renderProjectModal() {
+            const modal = document.getElementById('projectModal');
+            const projectList = document.getElementById('projectList');
+            const searchInput = document.getElementById('projectSearch');
+            
+            // Limpa lista anterior
+            projectList.innerHTML = '';
+            searchInput.value = '';
+            
+            // Adiciona opção "Sem projeto"
+            const noProjectItem = document.createElement('div');
+            noProjectItem.className = 'project-item';
+            noProjectItem.innerHTML = `
+                <div class="project-name">
+                    <span class="project-color" style="background-color: #ccc;"></span>
+                    Sem projeto
+                </div>
+                <div class="project-client">Nenhum projeto será associado</div>
+            `;
+            noProjectItem.onclick = () => selectProject(null);
+            projectList.appendChild(noProjectItem);
+            
+            // Renderiza projetos
+            renderProjects(projects);
+            
+            // Configura busca
+            searchInput.oninput = (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredProjects = projects.filter(project => 
+                    project.name.toLowerCase().includes(searchTerm) ||
+                    (project.clientName && project.clientName.toLowerCase().includes(searchTerm))
+                );
+                
+                // Limpa e re-renderiza
+                projectList.innerHTML = '';
+                projectList.appendChild(noProjectItem.cloneNode(true));
+                projectList.lastChild.onclick = () => selectProject(null);
+                renderProjects(filteredProjects);
+            };
+            
+            modal.style.display = 'flex';
+            searchInput.focus();
+        }
+
+        function renderProjects(projectsToRender) {
+            const projectList = document.getElementById('projectList');
+            
+            projectsToRender.forEach(project => {
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item';
+                
+                const projectColor = project.color || '#007bff';
+                const clientInfo = project.clientName ? `<div class="project-client">Cliente: ${project.clientName}</div>` : '';
+                
+                projectItem.innerHTML = `
+                    <div class="project-name">
+                        <span class="project-color" style="background-color: ${projectColor};"></span>
+                        ${project.name}
+                    </div>
+                    ${clientInfo}
+                `;
+                
+                projectItem.onclick = () => selectProject(project);
+                projectList.appendChild(projectItem);
+            });
+        }
+
+        function selectProject(project) {
+            selectedProjectId = project ? project.id : null;
+            const projectName = project ? project.name : 'Sem projeto';
+            
+            log(`📋 Projeto selecionado: ${projectName}`, 'info');
+            if (project) {
+                log(`   ID: ${project.id}`, 'info');
+                if (project.clientName) {
+                    log(`   Cliente: ${project.clientName}`, 'info');
+                }
+            }
+            
+            // Fecha modal
+            document.getElementById('projectModal').style.display = 'none';
+            
+            // Prossegue com a parada do timer
+            executeStopTimer();
+        }
+
+        function cancelProjectSelection() {
+            log('❌ Seleção de projeto cancelada', 'warning');
+            document.getElementById('projectModal').style.display = 'none';
+            selectedProjectId = null;
+        }
+
+        async function stopTimerWithProject() {
+            if (!currentTimer) {
+                log('❌ Nenhum timer ativo para parar', 'error');
+                return;
+            }
+            
+            log('🔄 Iniciando processo de parada do timer...', 'info');
+            
+            // Primeiro busca projetos se não estiverem carregados
+            if (projects.length === 0) {
+                await getProjects();
+            }
+            
+            // Mostra modal de seleção de projeto
+            showProjectModal();
+        }
+
+        async function executeStopTimer() {
+            const config = getConfig();
+            if (!config || !currentTimer) return;
+            
+            try {
+                // Se um projeto foi selecionado, primeiro atualiza o time-entry
+                if (selectedProjectId) {
+                    log('🔄 Atualizando time-entry com projeto...', 'info');
+                    
+                    const updateResponse = await fetch(`https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/time-entries/${currentTimer.id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Api-Key": config.apiKey,
+                        },
+                        body: JSON.stringify({
+                            "start": currentTimer.timeInterval.start,
+                            "description": currentTimer.description,
+                            "projectId": selectedProjectId
+                        }),
+                    });
+                    
+                    if (updateResponse.ok) {
+                        const updateResult = await updateResponse.json();
+                        log('✅ Time-entry atualizado com projeto!', 'success');
+                        
+                        const project = projects.find(p => p.id === selectedProjectId);
+                        if (project) {
+                            log(`📋 Projeto: ${project.name}`, 'info');
+                        }
+                    } else {
+                        const updateError = await updateResponse.json();
+                        log(`⚠️ Erro ao atualizar projeto (continuando...): ${updateResponse.status}`, 'warning');
+                        log(`❌ Detalhes: ${JSON.stringify(updateError)}`, 'warning');
+                    }
+                }
+                
+                // Agora para o timer
+                log('🔄 Parando o timer...', 'info');
+                
+                // Primeiro obtém informações do usuário
+                const userResponse = await fetch(`https://api.clockify.me/api/v1/user`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                });
+                
+                if (!userResponse.ok) {
+                    throw new Error(`Erro ao obter usuário: ${userResponse.status}`);
+                }
+                
+                const user = await userResponse.json();
+                log(`👤 Usuário: ${user.name} (ID: ${user.id})`, 'info');
+                
+                // Para o timer
+                const stopResponse = await fetch(`https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/user/${user.id}/time-entries`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                    body: JSON.stringify({
+                        "end": new Date().toISOString()
+                    }),
+                });
+                
+                if (stopResponse.ok) {
+                    const stopResult = await stopResponse.json();
+                    log('🎉 Timer parado com sucesso!', 'success');
+                    log(`⏹️ Fim: ${new Date(stopResult.timeInterval.end).toLocaleString()}`, 'info');
+                    
+                    // Calcula duração
+                    const start = new Date(stopResult.timeInterval.start);
+                    const end = new Date(stopResult.timeInterval.end);
+                    const duration = Math.round((end - start) / 1000);
+                    const hours = Math.floor(duration / 3600);
+                    const minutes = Math.floor((duration % 3600) / 60);
+                    const seconds = duration % 60;
+                    
+                    log(`⏱️ Duração: ${hours}h ${minutes}m ${seconds}s`, 'info');
+                    
+                    updateTimerStatus(null);
+                } else {
+                    const stopError = await stopResponse.json();
+                    log(`❌ Erro ao parar timer: ${stopResponse.status}`, 'error');
+                    log(`❌ Detalhes: ${JSON.stringify(stopError)}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro durante processo de parada: ${error.message}`, 'error');
+            } finally {
+                selectedProjectId = null;
+            }
+        }
+
+        // Modal - clique fora para fechar
+        document.getElementById('projectModal').onclick = (e) => {
+            if (e.target === document.getElementById('projectModal')) {
+                cancelProjectSelection();
+            }
+        };
+
+        // Tecla ESC para fechar modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('projectModal').style.display === 'flex') {
+                cancelProjectSelection();
+            }
+        });
+        
+        // Log inicial
+        log('🚀 Sistema de timer melhorado carregado!', 'success');
+        log('📋 Funcionalidades: start → select project → update → stop', 'info');
+        log('🔧 Configure suas credenciais e teste o fluxo completo.', 'info');
+        log('', 'info');
+    </script>
+</body>
+</html>

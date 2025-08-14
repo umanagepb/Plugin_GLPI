@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Clockify Integration - Configurações</title>
+</head>
+<body>
+    <h1>Teste de Configurações - Clockify Integration</h1>
+    
+    <div id="debug-info">
+        <h2>Debug das Configurações</h2>
+        <div id="config-status"></div>
+    </div>
+
+    <script>
+        // Simula as configurações que deveriam ser injetadas pelo PHP
+        console.log('=== TESTE DE CONFIGURAÇÕES ===');
+        
+        // Verifica se window.clockifyIntegrationConfig existe
+        console.log('window.clockifyIntegrationConfig existe?', !!window.clockifyIntegrationConfig);
+        console.log('window.clockifyIntegrationConfig =', window.clockifyIntegrationConfig);
+        
+        // Aguarda um pouco e verifica novamente
+        setTimeout(function() {
+            console.log('=== VERIFICAÇÃO APÓS 500ms ===');
+            console.log('window.clockifyIntegrationConfig existe?', !!window.clockifyIntegrationConfig);
+            console.log('window.clockifyIntegrationConfig =', window.clockifyIntegrationConfig);
+            
+            let config = window.clockifyIntegrationConfig || {};
+            
+            let statusHTML = '<h3>Status das Configurações:</h3>';
+            statusHTML += '<p><strong>Objeto existe:</strong> ' + (!!window.clockifyIntegrationConfig ? 'SIM' : 'NÃO') + '</p>';
+            statusHTML += '<p><strong>API Key:</strong> ' + (config.apiKey ? 'Configurado (' + config.apiKey.length + ' chars)' : 'Não configurado') + '</p>';
+            statusHTML += '<p><strong>Workspace ID:</strong> ' + (config.workspaceId ? 'Configurado (' + config.workspaceId.length + ' chars)' : 'Não configurado') + '</p>';
+            statusHTML += '<p><strong>Configuração completa:</strong> <pre>' + JSON.stringify(config, null, 2) + '</pre></p>';
+            
+            document.getElementById('config-status').innerHTML = statusHTML;
+            
+        }, 500);
+        
+        // Para testar manualmente, você pode definir as configurações aqui:
+        // window.clockifyIntegrationConfig = {
+        //     apiKey: 'sua-api-key-aqui',
+        //     workspaceId: 'seu-workspace-id-aqui'
+        // };
+    </script>
+</body>
+</html>

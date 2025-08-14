@@ -12,21 +12,32 @@ function plugin_clockifyintegration_init() {
       return;
    }
 
+   // Debug para verificar se a função está sendo chamada
+   error_log('Clockify Integration: Hook init chamado');
+
    // Obtém as configurações dinâmicas do plugin
-   $api_key      = addslashes(Config::getConfigurationValue("plugin:Clockify Integration", "api_key"));
-   $workspace_id = addslashes(Config::getConfigurationValue("plugin:Clockify Integration", "workspace_id"));
+   $api_key = Config::getConfigurationValue("plugin:Clockify Integration", "api_key") ?: '';
+   $workspace_id = Config::getConfigurationValue("plugin:Clockify Integration", "workspace_id") ?: '';
 
-   // Insere um script com a configuração que será acessado pelo JavaScript
-   echo "<script>
-       window.clockifyIntegrationConfig = {
-           apiKey: '{$api_key}',
-           workspaceId: '{$workspace_id}'
-       };
+   // Debug das configurações
+   error_log('Clockify Integration: API Key = ' . (!empty($api_key) ? 'Configurado' : 'Vazio'));
+   error_log('Clockify Integration: Workspace ID = ' . (!empty($workspace_id) ? 'Configurado' : 'Vazio'));
+
+   // Usa json_encode para escape seguro
+   $api_key_safe = json_encode($api_key);
+   $workspace_id_safe = json_encode($workspace_id);
+
+   // Insere um script com a configuração que será acessado pelo JavaScript (fallback)
+   echo "<script type='text/javascript'>
+       // Fallback para compatibilidade - apenas se ainda não foi definido
+       if (typeof window.clockifyIntegrationConfig === 'undefined') {
+           console.log('Clockify Integration: Usando configuração de fallback via hook');
+           window.clockifyIntegrationConfig = {
+               apiKey: {$api_key_safe},
+               workspaceId: {$workspace_id_safe}
+           };
+           window.clockifyIntegrationConfigLoaded = true;
+           console.log('Clockify Integration: Configuração de fallback definida', window.clockifyIntegrationConfig);
+       }
    </script>";
-
-   // Inclui o arquivo CSS do plugin
-   Html::includeCSS($CFG_GLPI['root_doc']."/plugins/clockifyintegration/css/clockify.css");
-   
-   // Inclui o arquivo JavaScript do plugin
-   Html::includeJS($CFG_GLPI['root_doc']."/plugins/clockifyintegration/js/clockify.js");
 }

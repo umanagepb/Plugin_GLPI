@@ -101,10 +101,17 @@ clockifyintegration/
 4. Verifique se não há erros JavaScript
 
 ### Erro ao iniciar cronômetro
+
+#### Erro: "No static resource v1/time-entries" (CORRIGIDO)
+Este erro foi corrigido na versão atual. Se ainda estiver ocorrendo:
+1. Verifique se você tem a versão mais recente do plugin
+2. O endpoint correto é: `https://api.clockify.me/api/v1/workspaces/{workspaceId}/time-entries`
+
+#### Outros erros de API
 1. Verifique se a API Key está correta
 2. Confirme se o Workspace ID está correto
 3. Verifique sua conexão com a internet
-4. Teste as credenciais diretamente na API do Clockify
+4. Teste as credenciais diretamente na API do Clockify usando o arquivo `test_api_fix.html`
 
 ### Problemas de layout
 1. O CSS do plugin usa `!important` para evitar conflitos

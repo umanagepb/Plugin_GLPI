@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Final - Clockify Integration</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Teste Final - Clockify Integration</h1>
+    <p>Este arquivo testa se as configurações estão sendo carregadas corretamente.</p>
+    
+    <div id="results"></div>
+    
+    <h2>Logs do Console</h2>
+    <div id="console-logs"></div>
+    
+    <script>
+        // Captura logs do console para mostrar na página
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        const logs = [];
+        
+        function addLog(type, args) {
+            const timestamp = new Date().toISOString();
+            logs.push({ type, timestamp, message: Array.from(args).join(' ') });
+            updateConsoleDisplay();
+        }
+        
+        console.log = function(...args) {
+            addLog('log', args);
+            originalLog.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+            addLog('warn', args);
+            originalWarn.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            addLog('error', args);
+            originalError.apply(console, args);
+        };
+        
+        function updateConsoleDisplay() {
+            const consoleDiv = document.getElementById('console-logs');
+            consoleDiv.innerHTML = logs.map(log => 
+                `<div class="${log.type}"><strong>[${log.timestamp}]</strong> ${log.message}</div>`
+            ).join('');
+        }
+        
+        console.log('=== INICIANDO TESTE FINAL ===');
+        
+        // Função principal de teste
+        function runTest() {
+            const resultsDiv = document.getElementById('results');
+            let results = '';
+            
+            // Teste 1: Verificar se o arquivo config.js.php está acessível
+            results += '<h3>Teste 1: Arquivo config.js.php</h3>';
+            
+            const testScript = document.createElement('script');
+            testScript.src = 'js/config.js.php?' + Date.now();
+            
+            testScript.onload = function() {
+                results += '<div class="status success">✓ config.js.php carregado com sucesso</div>';
+                checkConfigurations();
+            };
+            
+            testScript.onerror = function() {
+                results += '<div class="status error">✗ Erro ao carregar config.js.php</div>';
+                results += '<p>Verifique se o arquivo existe e se o servidor está configurado para processar .js.php como PHP.</p>';
+                document.getElementById('results').innerHTML = results;
+            };
+            
+            document.head.appendChild(testScript);
+            
+            function checkConfigurations() {
+                // Aguarda um pouco para o script ser processado
+                setTimeout(() => {
+                    results += '<h3>Teste 2: Configurações</h3>';
+                    
+                    if (typeof window.clockifyIntegrationConfig !== 'undefined') {
+                        results += '<div class="status success">✓ window.clockifyIntegrationConfig existe</div>';
+                        
+                        const config = window.clockifyIntegrationConfig;
+                        
+                        if (config.apiKey) {
+                            results += `<div class="status success">✓ API Key: Configurado (${config.apiKey.length} chars)</div>`;
+                        } else {
+                            results += '<div class="status warning">⚠ API Key: Vazio</div>';
+                        }
+                        
+                        if (config.workspaceId) {
+                            results += `<div class="status success">✓ Workspace ID: Configurado (${config.workspaceId.length} chars)</div>`;
+                        } else {
+                            results += '<div class="status warning">⚠ Workspace ID: Vazio</div>';
+                        }
+                        
+                        results += '<h4>Configuração completa:</h4>';
+                        results += '<pre>' + JSON.stringify(config, null, 2) + '</pre>';
+                        
+                    } else {
+                        results += '<div class="status error">✗ window.clockifyIntegrationConfig não existe</div>';
+                    }
+                    
+                    if (typeof window.clockifyIntegrationConfigLoaded !== 'undefined') {
+                        results += '<div class="status success">✓ clockifyIntegrationConfigLoaded: ' + window.clockifyIntegrationConfigLoaded + '</div>';
+                    } else {
+                        results += '<div class="status warning">⚠ clockifyIntegrationConfigLoaded não definido</div>';
+                    }
+                    
+                    // Teste 3: Testar carregamento do JavaScript principal
+                    results += '<h3>Teste 3: JavaScript Principal</h3>';
+                    
+                    const mainScript = document.createElement('script');
+                    mainScript.src = 'js/clockify.js?' + Date.now();
+                    
+                    mainScript.onload = function() {
+                        results += '<div class="status success">✓ clockify.js carregado com sucesso</div>';
+                        document.getElementById('results').innerHTML = results;
+                    };
+                    
+                    mainScript.onerror = function() {
+                        results += '<div class="status error">✗ Erro ao carregar clockify.js</div>';
+                        document.getElementById('results').innerHTML = results;
+                    };
+                    
+                    document.head.appendChild(mainScript);
+                    
+                    document.getElementById('results').innerHTML = results;
+                    
+                }, 500);
+            }
+            
+            document.getElementById('results').innerHTML = results;
+        }
+        
+        // Executa o teste quando a página carregar
+        window.addEventListener('load', runTest);
+    </script>
+</body>
+</html>

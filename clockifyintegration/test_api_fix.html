@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste API Clockify - Endpoint Corrigido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .config-section {
+            background: #e9f7ef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .config-section h3 {
+            margin-top: 0;
+            color: #27ae60;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log-area {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        .endpoint-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .endpoint-box {
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .endpoint-old {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .endpoint-new {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        code {
+            background: #f1f3f4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Teste API Clockify - Correção de Endpoints</h1>
+    
+    <div class="test-container">
+        <h2>📋 Problema Identificado</h2>
+        <p>O erro <code>{"message":"No static resource v1/time-entries.","code":3000}</code> indicava que o endpoint da API do Clockify estava incorreto.</p>
+        
+        <div class="endpoint-comparison">
+            <div class="endpoint-box endpoint-old">
+                <h3>❌ Endpoint Anterior (Incorreto)</h3>
+                <code>POST https://api.clockify.me/api/v1/time-entries</code>
+                <p>• workspaceId no body da requisição</p>
+                <p>• Endpoint genérico sem workspace</p>
+            </div>
+            <div class="endpoint-box endpoint-new">
+                <h3>✅ Endpoint Corrigido</h3>
+                <code>POST https://api.clockify.me/api/v1/workspaces/{workspaceId}/time-entries</code>
+                <p>• workspaceId na URL</p>
+                <p>• Endpoint específico do workspace</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <div class="config-section">
+            <h3>🔑 Configuração de Teste</h3>
+            <p>Para testar a API corrigida, insira suas credenciais do Clockify:</p>
+            
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" placeholder="Sua API Key do Clockify" />
+            
+            <label for="workspaceId">Workspace ID:</label>
+            <input type="text" id="workspaceId" placeholder="ID do seu workspace" />
+            
+            <p><small>
+                <strong>Como obter:</strong><br>
+                • API Key: <a href="https://clockify.me/user/settings" target="_blank">https://clockify.me/user/settings</a><br>
+                • Workspace ID: Copie da URL quando estiver no workspace do Clockify
+            </small></p>
+        </div>
+
+        <h3>🧪 Testes da API</h3>
+        <button onclick="testOldEndpoint()">❌ Testar Endpoint Antigo (Deve Falhar)</button>
+        <button onclick="testNewEndpoint()">✅ Testar Endpoint Corrigido</button>
+        <button onclick="clearLog()">🗑️ Limpar Log</button>
+        
+        <h3>📝 Log de Teste</h3>
+        <div id="logArea" class="log-area"></div>
+    </div>
+
+    <!-- Simula estrutura de ticket do GLPI -->
+    <div style="display: none;">
+        <form name="form">
+            <input type="hidden" name="id" value="12345">
+            <input type="text" name="name" value="Teste de Integração Clockify - Endpoint Corrigido">
+        </form>
+    </div>
+
+    <script>
+        let logArea = document.getElementById('logArea');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type;
+            logArea.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        function clearLog() {
+            logArea.innerHTML = '';
+        }
+        
+        function getConfig() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const workspaceId = document.getElementById('workspaceId').value.trim();
+            
+            if (!apiKey || !workspaceId) {
+                log('❌ Erro: Configure a API Key e Workspace ID primeiro!', 'error');
+                return null;
+            }
+            
+            return { apiKey, workspaceId };
+        }
+        
+        async function testOldEndpoint() {
+            const config = getConfig();
+            if (!config) return;
+            
+            log('🔄 Testando endpoint ANTIGO (deve falhar)...', 'info');
+            log(`📍 URL: https://api.clockify.me/api/v1/time-entries`, 'info');
+            
+            const data = {
+                "start": new Date().toISOString(),
+                "description": "TESTE - Endpoint Antigo (deve falhar)",
+                "workspaceId": config.workspaceId
+            };
+            
+            try {
+                const response = await fetch("https://api.clockify.me/api/v1/time-entries", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    log(`❌ ESPERADO: Falha com status ${response.status}`, 'error');
+                    log(`❌ Erro: ${JSON.stringify(result)}`, 'error');
+                    
+                    if (result.message && result.message.includes("No static resource")) {
+                        log('✅ Confirmado: Este é exatamente o erro que estava ocorrendo!', 'success');
+                    }
+                } else {
+                    log('🤔 Inesperado: Endpoint antigo funcionou (pode ter mudado)', 'info');
+                    log(`📄 Resposta: ${JSON.stringify(result)}`, 'info');
+                }
+            } catch (error) {
+                log(`❌ Erro de rede: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testNewEndpoint() {
+            const config = getConfig();
+            if (!config) return;
+            
+            log('🔄 Testando endpoint CORRIGIDO...', 'info');
+            log(`📍 URL: https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/time-entries`, 'info');
+            
+            const data = {
+                "start": new Date().toISOString(),
+                "description": "TESTE - Endpoint Corrigido via GLPI Plugin"
+            };
+            
+            try {
+                const response = await fetch(`https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/time-entries`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    log('🎉 SUCESSO: Endpoint corrigido funcionou!', 'success');
+                    log(`📄 Time entry criado: ${result.id}`, 'success');
+                    log(`⏱️ Início: ${result.timeInterval.start}`, 'info');
+                    log(`📝 Descrição: ${result.description}`, 'info');
+                    
+                    // Tenta parar o timer após 2 segundos
+                    setTimeout(() => stopTestTimer(config), 2000);
+                } else {
+                    log(`❌ Falha com status ${response.status}`, 'error');
+                    log(`❌ Erro: ${JSON.stringify(result)}`, 'error');
+                    
+                    if (response.status === 401) {
+                        log('🔑 Dica: Verifique se a API Key está correta', 'info');
+                    } else if (response.status === 403) {
+                        log('🚫 Dica: Verifique as permissões da API Key no workspace', 'info');
+                    } else if (response.status === 404) {
+                        log('🔍 Dica: Verifique se o Workspace ID está correto', 'info');
+                    }
+                }
+            } catch (error) {
+                log(`❌ Erro de rede: ${error.message}`, 'error');
+                log('🌐 Dica: Verifique sua conexão com a internet e configurações de CORS', 'info');
+            }
+        }
+        
+        async function stopTestTimer(config) {
+            log('🛑 Parando timer de teste...', 'info');
+            
+            try {
+                // Primeiro, obter o ID do usuário
+                log('🔍 Obtendo informações do usuário...', 'info');
+                const userResponse = await fetch(`https://api.clockify.me/api/v1/user`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                });
+                
+                if (!userResponse.ok) {
+                    log(`❌ Erro ao obter usuário: Status ${userResponse.status}`, 'error');
+                    return;
+                }
+                
+                const user = await userResponse.json();
+                log(`✅ Usuário obtido: ${user.name} (ID: ${user.id})`, 'success');
+                
+                // Agora parar o timer usando o endpoint correto
+                log(`🔄 Parando timer para usuário ${user.id}...`, 'info');
+                const response = await fetch(`https://api.clockify.me/api/v1/workspaces/${config.workspaceId}/user/${user.id}/time-entries`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": config.apiKey,
+                    },
+                    body: JSON.stringify({
+                        "end": new Date().toISOString()
+                    }),
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    log('✅ Timer de teste parado com sucesso!', 'success');
+                    log(`⏹️ Fim: ${result.timeInterval ? result.timeInterval.end : 'N/A'}`, 'info');
+                    log(`📊 Time entry ID: ${result.id}`, 'info');
+                } else {
+                    const errorData = await response.json();
+                    log(`❌ Erro ao parar timer: Status ${response.status}`, 'error');
+                    log(`❌ Detalhes: ${JSON.stringify(errorData)}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erro ao parar timer: ${error.message}`, 'error');
+            }
+        }
+        
+        // Log inicial
+        log('🚀 Teste de correção da API Clockify iniciado', 'success');
+        log('📋 Problema original: {"message":"No static resource v1/time-entries.","code":3000}', 'info');
+        log('🔧 Solução: Corrigir endpoint para incluir workspaceId na URL', 'info');
+        log('', 'info');
+        
+        // Simula configurações se estiverem disponíveis
+        if (window.clockifyIntegrationConfig) {
+            document.getElementById('apiKey').value = window.clockifyIntegrationConfig.apiKey || '';
+            document.getElementById('workspaceId').value = window.clockifyIntegrationConfig.workspaceId || '';
+            log('✅ Configurações do plugin carregadas automaticamente', 'success');
+        } else {
+            log('ℹ️ Configure a API Key e Workspace ID para começar os testes', 'info');
+        }
+    </script>
+</body>
+</html>

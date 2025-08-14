@@ -1,0 +1,10 @@
+# Configuração para processar arquivos .js.php como PHP
+<Files "*.js.php">
+    SetHandler application/x-httpd-php
+</Files>
+
+# Configuração de cache para arquivos de configuração dinâmicos
+<Files "config.js.php">
+    Header set Cache-Control "no-cache, must-revalidate"
+    Header set Expires "Mon, 26 Jul 1997 05:00:00 GMT"
+</Files>

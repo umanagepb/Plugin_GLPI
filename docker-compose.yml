@@ -43,6 +43,7 @@ services:
       - ./evolutionintegration:/var/www/glpi/plugins/evolutionintegration:rw
       - ./hourstracking:/var/www/glpi/plugins/hourstracking:rw
       - ./clockifyintegration:/var/www/glpi/plugins/clockifyintegration:rw
+      - ./actualtime:/var/www/glpi/plugins/actualtime:rw
     ports:
       - 8080:80
     depends_on:
