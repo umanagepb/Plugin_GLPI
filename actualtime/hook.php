@@ -111,6 +111,50 @@ function plugin_actualtime_postshowitem($params = []): void
     ) {
         PluginActualtimeSourcetimer::postShowItem($params);
     }
+    
+    // Include Clockify configuration in JavaScript
+    plugin_actualtime_add_clockify_config();
+}
+
+/**
+ * plugin_actualtime_add_clockify_config
+ * Add Clockify configuration to JavaScript global variables
+ *
+ * @return void
+ */
+function plugin_actualtime_add_clockify_config(): void
+{
+    static $clockify_config_added = false;
+    
+    if (!$clockify_config_added) {
+        $config = new PluginActualtimeConfig();
+        $clockifyApiKey = $config->getClockifyConfig('api_key');
+        $clockifyWorkspaceId = $config->getClockifyConfig('workspace_id');
+        
+        echo "<script>
+        if (typeof CFG_GLPI === 'undefined') CFG_GLPI = {};
+        CFG_GLPI.clockify_api_key = " . json_encode($clockifyApiKey) . ";
+        CFG_GLPI.clockify_workspace_id = " . json_encode($clockifyWorkspaceId) . ";
+        </script>";
+        
+        $clockify_config_added = true;
+    }
+}
+
+/**
+ * plugin_actualtime_show_user_preferences
+ * Show user settings tab in user profile
+ *
+ * @param  array $params
+ * @return void
+ */
+function plugin_actualtime_show_user_preferences($params = []): void
+{
+    $item = $params['item'] ?? null;
+    if ($item instanceof User) {
+        $usersettings = new PluginActualtimeUsersettings();
+        $usersettings->showUserSettings($item->getID());
+    }
 }
 
 /**

@@ -148,6 +148,36 @@ class PluginActualtimeConfig extends CommonDBTM
         echo "</td>";
         echo "</tr>";
 
+        echo "<tr class='tab_bg_1' name='optional$rand'>";
+        echo "<td>" . __("Show Permanent Timer Popup", "actualtime") . "</td><td>";
+        Dropdown::showYesNo('show_permanent_popup', $config->showPermanentPopup(), -1);
+        echo "</td>";
+        echo "</tr>";
+
+        echo "</table>";
+
+        // Clockify Integration Section
+        echo "<br><table class='tab_cadre_fixe'><thead>";
+        echo "<th colspan='4'>" . __('Clockify Integration', 'actualtime') . '</th></thead>';
+        
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __("Clockify Workspace ID", "actualtime") . "</td><td>";
+        echo "<input type='text' name='clockify_workspace_id' value='" . Html::entities_deep($config->getClockifyConfig('workspace_id')) . "' size='50' />";
+        echo "<br><small>" . __('Global Workspace ID for all users', 'actualtime') . "</small>";
+        echo "</td>";
+        echo "</tr>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td colspan='2'>";
+        echo "<p><strong>" . __('Note:', 'actualtime') . "</strong> ";
+        echo __('Clockify API Keys are now configured per user in their personal settings.', 'actualtime');
+        echo "<br>" . __('Users can set their API Key in: User Profile > ActualTime tab', 'actualtime');
+        echo "</p>";
+        echo "</td>";
+        echo "</tr>";
+
+        echo "</table>";
+
         $config->showFormButtons(['candel' => false]);
 
         return false;
@@ -232,6 +262,45 @@ class PluginActualtimeConfig extends CommonDBTM
     }
 
     /**
+     * updateClockifyConfig
+     * Update Clockify configuration (only workspace_id, API key is per user)
+     *
+     * @param array $config
+     * @return bool
+     */
+    public function updateClockifyConfig(array $config): bool
+    {
+        if (isset($config['workspace_id'])) {
+            Config::setConfigurationValues('plugin:ActualTime', ['clockify_workspace_id' => $config['workspace_id']]);
+        }
+        return true;
+    }
+
+    /**
+     * getClockifyConfig
+     * Get Clockify configuration value
+     *
+     * @param string $key
+     * @return string
+     */
+    public function getClockifyConfig(string $key): string
+    {
+        $configKey = 'clockify_' . $key;
+        return Config::getConfigurationValue('plugin:ActualTime', $configKey) ?: '';
+    }
+
+    /**
+     * showPermanentPopup
+     * Is permanent timer popup enabled?
+     *
+     * @return bool
+     */
+    public function showPermanentPopup(): bool
+    {
+        return ($this->fields['show_permanent_popup'] ?? true);
+    }
+
+    /**
      * install
      *
      * @param  Migration $migration
@@ -260,6 +329,7 @@ class PluginActualtimeConfig extends CommonDBTM
                 `autoupdate_duration` TINYINT NOT NULL DEFAULT '0',
                 `planned_task` TINYINT NOT NULL DEFAULT '0',
                 `multiple_day` TINYINT NOT NULL DEFAULT '0',
+                `show_permanent_popup` TINYINT NOT NULL DEFAULT '1',
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
@@ -276,6 +346,7 @@ class PluginActualtimeConfig extends CommonDBTM
 
             $migration->addField($table, 'planned_task', 'bool');
             $migration->addField($table, 'multiple_day', 'bool');
+            $migration->addField($table, 'show_permanent_popup', 'bool', ['value' => 1]);
 
             $migration->migrationOneTable($table);
         }

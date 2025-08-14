@@ -61,6 +61,27 @@ if (isset($_POST["action"])) {
             echo abs(PluginActualtimeTask::totalEndTime($task_id, $itemtype));
             break;
     }
+} elseif (isset($_GET["getconfig"])) {
+   // Get configuration for popup display
+   $config = new PluginActualtimeConfig();
+   $result = [
+      'show_permanent_popup' => $config->showPermanentPopup()
+   ];
+   echo json_encode($result);
+} elseif (isset($_GET["action"]) && $_GET["action"] === 'get_clockify_config') {
+   // Get Clockify configuration with user-specific API key
+   header('Content-Type: application/json');
+   $config = new PluginActualtimeConfig();
+   $usersettings = new PluginActualtimeUsersettings();
+   
+   $clockify_config = $config->getClockifyConfig();
+   $api_key = $usersettings->getClockifyApiKey(Session::getLoginUserID());
+   
+   // Add API key to the configuration
+   $clockify_config['api_key'] = $api_key;
+   
+   echo json_encode($clockify_config);
+   exit;
 } elseif (isset($_GET["footer"])) {
    // Base function for all general stuff in javascript
    // Translations

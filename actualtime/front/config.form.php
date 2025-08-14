@@ -47,6 +47,15 @@ if (isset($_POST["update"])) {
     Html::back();
 }
 
+// Handle Clockify configuration update (only workspace_id)
+if (isset($_POST['update_clockify'])) {
+    $config->updateClockifyConfig([
+        'workspace_id' => $_POST['clockify_workspace_id']
+    ]);
+    Session::addMessageAfterRedirect(__('Configuration updated successfully'));
+    Html::back();
+}
+
 /** @var array $CFG_GLPI */
 global $CFG_GLPI;
 
